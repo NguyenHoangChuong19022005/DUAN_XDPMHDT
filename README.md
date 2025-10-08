@@ -1,4 +1,5 @@
-# EduMatch – Nền tảng kết nối sinh viên với học bổng và phòng thí nghiệm nghiên cứu
+# EduMatch (EDU IP)
+Nền tảng thông minh kết nối sinh viên với các cơ hội nghiên cứu và học bổng sau đại học
 
 **EduMatch** là nền tảng thông minh giúp **sinh viên**, **trường đại học**, **giáo sư**, và **nhà cung cấp học bổng** kết nối trực tiếp với nhau.  
 Hệ thống áp dụng **AI Matching** để đề xuất học bổng, phòng thí nghiệm nghiên cứu và cơ hội học tập phù hợp nhất cho từng sinh viên.
@@ -118,49 +119,3 @@ Hệ thống bao gồm:
 | **Gói 6** | Soạn tài liệu, báo cáo & slide thuyết trình |
 
 ---
-
-##  9. Áp dụng Factory Method Design Pattern (Python)
-
-```python
-from abc import ABC, abstractmethod
-
-# Factory Method Pattern
-
-# 1. Interface (Creator)
-class ScholarshipCreator(ABC):
-    @abstractmethod
-    def create_scholarship(self):
-        pass
-
-# 2. Concrete Creators
-class ResearchScholarshipCreator(ScholarshipCreator):
-    def create_scholarship(self):
-        return ResearchScholarship()
-
-class AcademicScholarshipCreator(ScholarshipCreator):
-    def create_scholarship(self):
-        return AcademicScholarship()
-
-# 3. Product Interface
-class Scholarship(ABC):
-    @abstractmethod
-    def get_info(self):
-        pass
-
-# 4. Concrete Products
-class ResearchScholarship(Scholarship):
-    def get_info(self):
-        return " Học bổng nghiên cứu (Research Scholarship)"
-
-class AcademicScholarship(Scholarship):
-    def get_info(self):
-        return " Học bổng học thuật (Academic Scholarship)"
-
-# 5. Ứng dụng thực tế
-def client_code(creator: ScholarshipCreator):
-    scholarship = creator.create_scholarship()
-    print(f"Tạo thành công: {scholarship.get_info()}")
-
-if __name__ == "__main__":
-    client_code(ResearchScholarshipCreator())
-    client_code(AcademicScholarshipCreator())
