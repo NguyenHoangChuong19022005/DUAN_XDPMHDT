@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduMatch - Kết Nối Sinh Viên Với Học Bổng</title>
+    <!-- Tailwind CSS CDN cho styling nhanh -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Link đến file CSS tùy chỉnh -->
+    <link rel="stylesheet" href="index-candidates.css">
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Header chung -->
+    <header class="bg-blue-600 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold">EduMatch Candidates</h1>
+            <nav class="hidden md:flex space-x-6">
+                <a href="#" onclick="showPage('home')" class="hover:underline">Trang Chủ</a>
+                <a href="#" onclick="showPage('profile')" class="hover:underline">Hồ Sơ</a>
+                <a href="#" onclick="showPage('search')" class="hover:underline">Tìm Kiếm</a>
+                <a href="#" onclick="showPage('apply')" class="hover:underline">Nộp Đơn</a>
+                <a href="#" class="bg-white text-blue-600 px-4 py-2 rounded hover:bg-gray-100">Đăng Nhập</a>
+            </nav>
+            <!-- Mobile menu button -->
+            <button onclick="toggleMobileMenu()" class="md:hidden">☰</button>
+        </div>
+    </header>
+
+    <!-- Mobile menu -->
+    <div id="mobileMenu" class="md:hidden hidden bg-blue-700 px-4 py-2 space-y-2">
+        <a href="#" onclick="showPage('home'); toggleMobileMenu()" class="block hover:underline">Trang Chủ</a>
+        <a href="#" onclick="showPage('profile'); toggleMobileMenu()" class="block hover:underline">Hồ Sơ</a>
+        <a href="#" onclick="showPage('search'); toggleMobileMenu()" class="block hover:underline">Tìm Kiếm</a>
+        <a href="#" onclick="showPage('apply'); toggleMobileMenu()" class="block hover:underline">Nộp Đơn</a>
+        <a href="#" class="block bg-white text-blue-600 px-4 py-2 rounded hover:bg-gray-100">Đăng Nhập</a>
+    </div>
+
+    <!-- Nội dung chính - Các trang toggle -->
+    <main class="container mx-auto px-4 py-8">
+        
+        <!-- Trang Chủ -->
+        <section id="home" class="page">
+            <div class="text-center">
+                <h2 class="text-4xl font-bold mb-4">Chào Mừng Đến Với EduMatch</h2>
+                <p class="text-lg mb-6 max-w-2xl mx-auto">Nền tảng thông minh kết nối sinh viên với học bổng và cơ hội nghiên cứu sau đại học. Tìm kiếm cơ hội phù hợp chỉ với vài cú click!</p>
+                <div class="space-x-4">
+                    <button onclick="showPage('register')" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">Đăng Ký Ngay</button>
+                    <button onclick="showPage('login')" class="border border-blue-600 text-blue-600 px-6 py-3 rounded-lg hover:bg-blue-50">Đăng Nhập</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Trang Đăng Ký -->
+        <section id="register" class="page hidden">
+            <div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-2xl font-bold mb-4 text-center">Đăng Ký Tài Khoản</h2>
+                <form>
+                    <div class="mb-4">
+                        <label class="block text-sm font-bold mb-2">Email</label>
+                        <input type="email" placeholder="Nhập email của bạn" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-bold mb-2">Mật Khẩu</label>
+                        <input type="password" placeholder="Nhập mật khẩu" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">Gửi OTP & Đăng Ký</button>
+                </form>
+                <p class="text-center mt-4 text-sm">Đã có tài khoản? <a href="#" onclick="showPage('login')" class="text-blue-600">Đăng nhập</a></p>
+            </div>
+        </section>
+
+        <!-- Trang Hồ Sơ (Tạo/Cập Nhật) -->
+        <section id="profile" class="page hidden">
+            <div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-2xl font-bold mb-4">Hồ Sơ Cá Nhân</h2>
+                <form>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-bold mb-2">GPA</label>
+                            <input type="number" step="0.01" placeholder="Ví dụ: 3.5" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold mb-2">Lĩnh Vực Nghiên Cứu</label>
+                            <input type="text" placeholder="Ví dụ: AI, Sinh học" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-bold mb-2">Kỹ Năng</label>
+                            <textarea placeholder="Liệt kê kỹ năng (ví dụ: Python, Research)" class="w-full px-3 py-2 border border-gray-300 rounded-md h-24"></textarea>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-bold mb-2">Thành Tích Học Tập</label>
+                            <textarea placeholder="Mô tả thành tích" class="w-full px-3 py-2 border border-gray-300 rounded-md h-24"></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="mt-6 bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700">Cập Nhật Hồ Sơ</button>
+                </form>
+                <div class="mt-6 p-4 bg-blue-50 rounded-md">
+                    <h3 class="font-bold">Đề Xuất AI (Premium)</h3>
+                    <p class="text-sm">Mua gói để xem matching score với học bổng.</p>
+                    <button class="text-blue-600 underline">Nâng Cấp</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Trang Tìm Kiếm Học Bổng -->
+        <section id="search" class="page hidden">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold mb-4">Tìm Kiếm Học Bổng & Cơ Hội</h2>
+                <div class="flex flex-col md:flex-row gap-4">
+                    <input type="text" placeholder="Tìm kiếm theo từ khóa..." class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Tìm</button>
+                </div>
+            </div>
+            <!-- Bộ Lọc -->
+            <div class="mb-6 bg-white p-4 rounded-lg shadow-sm">
+                <h3 class="font-bold mb-2">Bộ Lọc</h3>
+                <div class="grid md:grid-cols-4 gap-2">
+                    <select class="px-2 py-1 border border-gray-300 rounded">
+                        <option>Lĩnh Vực</option>
+                        <option>AI</option>
+                        <option>Sinh Học</option>
+                    </select>
+                    <select class="px-2 py-1 border border-gray-300 rounded">
+                        <option>Quốc Gia</option>
+                        <option>Mỹ</option>
+                        <option>Anh</option>
+                    </select>
+                    <input type="number" placeholder="GPA Min" class="px-2 py-1 border border-gray-300 rounded w-full">
+                    <select class="px-2 py-1 border border-gray-300 rounded">
+                        <option>Loại</option>
+                        <option>Học Bổng</option>
+                        <option>Nghiên Cứu</option>
+                    </select>
+                </div>
+            </div>
+            <!-- Danh Sách Học Bổng Mẫu -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="bg-white p-4 rounded-lg shadow-sm border">
+                    <h4 class="font-bold">Học Bổng Fulbright (Mỹ)</h4>
+                    <p class="text-sm text-gray-600">Lĩnh vực: Xã hội học. GPA: 3.0+. Hạn: 31/12/2025.</p>
+                    <div class="mt-2 flex justify-between">
+                        <span class="text-green-600">Matching: 85%</span>
+                        <button class="text-blue-600 underline text-sm">Lưu</button>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-sm border">
+                    <h4 class="font-bold">Nghiên Cứu AI - MIT</h4>
+                    <p class="text-sm text-gray-600">Lĩnh vực: AI. GPA: 3.5+. Hạn: 15/01/2026.</p>
+                    <div class="mt-2 flex justify-between">
+                        <span class="text-green-600">Matching: 92%</span>
+                        <button class="text-blue-600 underline text-sm">Lưu</button>
+                    </div>
+                </div>
+                <!-- Thêm item mẫu khác nếu cần -->
+            </div>
+        </section>
+
+        <!-- Trang Nộp Đơn (Placeholder) -->
+        <section id="apply" class="page hidden">
+            <div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-2xl font-bold mb-4 text-center">Nộp Đơn Học Bổng</h2>
+                <p class="text-center mb-6">Chọn học bổng từ tìm kiếm để nộp đơn. Tải lên CV, thư động lực.</p>
+                <div class="space-y-4">
+                    <input type="file" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="CV">
+                    <input type="file" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Thư Động Lực">
+                    <button class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">Nộp Đơn</button>
+                </div>
+                <p class="text-center mt-4 text-sm">Theo dõi trạng thái: Đang chờ xử lý.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-800 text-white text-center py-4 mt-12">
+        <p>&copy; 2025 EduMatch. Hỗ trợ đa ngôn ngữ: Tiếng Việt & English.</p>
+    </footer>
+
+    <!-- JS đơn giản cho toggle pages (không bắt buộc, nhưng để demo) -->
+    <script>
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+            document.getElementById(pageId).classList.remove('hidden');
+        }
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+        // Mặc định show trang chủ
+        showPage('home');
+    </script>
+
+</body>
+</html>
