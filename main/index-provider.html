@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduMatch Provider - Quản Lý Học Bổng & Nghiên Cứu</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Link CSS tùy chỉnh -->
+    <link rel="stylesheet" href="styles-provider.css">
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Header chung (Provider-focused) -->
+    <header class="bg-blue-600 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <h1 class="text-2xl font-bold">EduMatch Provider</h1>
+                <span class="bg-green-500 text-xs px-2 py-1 rounded">Premium</span> <!-- Placeholder premium badge -->
+            </div>
+            <nav class="hidden md:flex space-x-6">
+                <a href="#" onclick="showPage('dashboard')" class="hover:underline">Dashboard</a>
+                <a href="#" onclick="showPage('post-opportunity')" class="hover:underline">Đăng Cơ Hội</a>
+                <a href="#" onclick="showPage('applications')" class="hover:underline">Quản Lý Đơn</a>
+                <a href="#" onclick="showPage('profile')" class="hover:underline">Hồ Sơ Tổ Chức</a>
+                <a href="#" onclick="showPage('communication')" class="hover:underline">Giao Tiếp</a>
+                <a href="#" class="bg-white text-blue-600 px-4 py-2 rounded hover:bg-gray-100">Đăng Xuất</a>
+            </nav>
+            <!-- Mobile menu button -->
+            <button onclick="toggleMobileMenu()" class="md:hidden">☰</button>
+        </div>
+    </header>
+
+    <!-- Mobile menu -->
+    <div id="mobileMenu" class="md:hidden hidden bg-blue-700 px-4 py-2 space-y-2">
+        <a href="#" onclick="showPage('dashboard'); toggleMobileMenu()" class="block hover:underline">Dashboard</a>
+        <a href="#" onclick="showPage('post-opportunity'); toggleMobileMenu()" class="block hover:underline">Đăng Cơ Hội</a>
+        <a href="#" onclick="showPage('applications'); toggleMobileMenu()" class="block hover:underline">Quản Lý Đơn</a>
+        <a href="#" onclick="showPage('profile'); toggleMobileMenu()" class="block hover:underline">Hồ Sơ Tổ Chức</a>
+        <a href="#" onclick="showPage('communication'); toggleMobileMenu()" class="block hover:underline">Giao Tiếp</a>
+        <a href="#" class="block bg-white text-blue-600 px-4 py-2 rounded hover:bg-gray-100">Đăng Xuất</a>
+    </div>
+
+    <!-- Nội dung chính - Các trang toggle -->
+    <main class="container mx-auto px-4 py-8">
+        
+        <!-- Dashboard -->
+        <section id="dashboard" class="page">
+            <h2 class="text-3xl font-bold mb-6">Dashboard Tổng Quan</h2>
+            <div class="grid md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h3 class="text-xl font-bold text-blue-600">5</h3>
+                    <p class="text-gray-600">Cơ Hội Đang Mở</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h3 class="text-xl font-bold text-green-600">1,250</h3>
+                    <p class="text-gray-600">Lượt Xem</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h3 class="text-xl font-bold text-orange-600">23</h3>
+                    <p class="text-gray-600">Đơn Mới</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h3 class="text-xl font-bold text-purple-600">15</h3>
+                    <p class="text-gray-600">Matching AI (Premium)</p>
+                </div>
+            </div>
+            <!-- Biểu đồ placeholder (sau này dùng Chart.js) -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="font-bold mb-4">Biểu Đồ Đơn Theo Thời Gian</h3>
+                <div class="h-64 bg-gray-200 rounded flex items-center justify-center">Placeholder Chart</div>
+            </div>
+        </section>
+
+        <!-- Trang Đăng Cơ Hội -->
+        <section id="post-opportunity" class="page hidden">
+            <div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-2xl font-bold mb-4">Đăng Cơ Hội Mới</h2>
+                <form>
+                    <div class="mb-4">
+                        <label class="block text-sm font-bold mb-2">Tiêu Đề (Học Bổng/Chương Trình)</label>
+                        <input type="text" placeholder="Ví dụ: Học Bổng Tiến Sĩ AI - MIT" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-bold mb-2">Mô Tả Chi Tiết</label>
+                        <textarea placeholder="Mô tả cơ hội, lợi ích..." class="w-full px-3 py-2 border border-gray-300 rounded-md h-32"></textarea>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm font-bold mb-2">Quốc Gia</label>
+                            <select class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                                <option>Mỹ</option>
+                                <option>Anh</option>
+                                <option>Việt Nam</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold mb-2">Hạn Chót Nộp Đơn</label>
+                            <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        </div>
+                    </div>
+                    <!-- Tiêu Chí Đủ Điều Kiện -->
+                    <div class="mb-6">
+                        <h3 class="font-bold mb-2">Tiêu Chí Ứng Viên (Bộ Lọc)</h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm mb-2">GPA Tối Thiểu</label>
+                                <input type="number" step="0.01" placeholder="3.0" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                            </div>
+                            <div>
+                                <label class="block text-sm mb-2">Kỹ Năng Bắt Buộc</label>
+                                <input type="text" placeholder="Ví dụ: Python, Research" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm mb-2">Kinh Nghiệm Yêu Cầu</label>
+                                <textarea placeholder="Mô tả kinh nghiệm" class="w-full px-3 py-2 border border-gray-300 rounded-md h-20"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700">Đăng Cơ Hội</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Trang Quản Lý Đơn -->
+        <section id="applications" class="page hidden">
+            <h2 class="text-2xl font-bold mb-6">Quản Lý Đơn Đăng Ký</h2>
+            <div class="mb-6">
+                <input type="text" placeholder="Tìm kiếm theo tên ứng viên..." class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mr-2">
+                <select class="px-3 py-2 border border-gray-300 rounded-md">
+                    <option>Trạng Thái: Tất Cả</option>
+                    <option>Chờ Xử Lý</option>
+                    <option>Đã Chấp Nhận</option>
+                </select>
+            </div>
+            <!-- Danh Sách Đơn Mẫu -->
+            <div class="space-y-4">
+                <div class="bg-white p-4 rounded-lg shadow-sm border flex justify-between items-center">
+                    <div>
+                        <h4 class="font-bold">Nguyễn Văn A - Ứng Viên Fulbright</h4>
+                        <p class="text-sm text-gray-600">GPA: 3.8 | Matching: 92% | Cơ Hội: Học Bổng AI</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-green-600 font-bold">Chờ Xử Lý</span>
+                        <div class="mt-2 space-x-2">
+                            <button class="text-blue-600 underline text-sm">Xem Hồ Sơ</button>
+                            <select class="px-2 py-1 border border-gray-300 rounded text-sm">
+                                <option>Cập Nhật Trạng Thái</option>
+                                <option>Mời Phỏng Vấn</option>
+                                <option>Chấp Nhận</option>
+                                <option>Từ Chối</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-sm border flex justify-between items-center">
+                    <div>
+                        <h4 class="font-bold">Trần Thị B - Nghiên Cứu Sinh Học</h4>
+                        <p class="text-sm text-gray-600">GPA: 3.5 | Matching: 78% | Cơ Hội: Phòng Lab MIT</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-orange-600 font-bold">Đã Mời Phỏng Vấn</span>
+                        <div class="mt-2 space-x-2">
+                            <button class="text-blue-600 underline text-sm">Xem Hồ Sơ</button>
+                            <select class="px-2 py-1 border border-gray-300 rounded text-sm">
+                                <option>Cập Nhật Trạng Thái</option>
+                                <option>Chấp Nhận</option>
+                                <option>Từ Chối</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <!-- Thêm item nếu cần -->
+            </div>
+        </section>
+
+        <!-- Trang Hồ Sơ Tổ Chức -->
+        <section id="profile" class="page hidden">
+            <div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-2xl font-bold mb-4">Hồ Sơ Tổ Chức</h2>
+                <form>
+                    <div class="mb-4">
+                        <label class="block text-sm font-bold mb-2">Tên Tổ Chức/Trường</label>
+                        <input type="text" placeholder="Ví dụ: Đại Học MIT" class="w-full px-3 py-2 border border-gray-300 rounded-md" value="Đại Học MIT">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-bold mb-2">Email Xác Minh</label>
+                        <input type="email" placeholder="org@mit.edu" class="w-full px-3 py-2 border border-gray-300 rounded-md" value="org@mit.edu">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-bold mb-2">Mô Tả Tổ Chức</label>
+                        <textarea placeholder="Giới thiệu..." class="w-full px-3 py-2 border border-gray-300 rounded-md h-24" value="Mô tả mẫu..."></textarea>
+                    </div>
+                    <div class="p-4 bg-yellow-50 rounded-md mb-6">
+                        <h3 class="font-bold mb-2">Nâng Cấp Premium</h3>
+                        <p class="text-sm">Truy cập AI đề xuất ứng viên phù hợp nhất. Xem matching score chi tiết.</p>
+                        <button class="mt-2 bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700">Mua Gói</button>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">Cập Nhật Hồ Sơ</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Trang Giao Tiếp -->
+        <section id="communication" class="page hidden">
+            <h2 class="text-2xl font-bold mb-6">Giao Tiếp Với Ứng Viên</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Danh Sách Chat Mẫu -->
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <h3 class="font-bold mb-4">Danh Sách Cuộc Trò Chuyện</h3>
+                    <div class="space-y-2">
+                        <div class="p-2 bg-gray-100 rounded cursor-pointer hover:bg-gray-200">Nguyễn Văn A (Fulbright) - 2 tin nhắn mới</div>
+                        <div class="p-2 bg-gray-100 rounded cursor-pointer hover:bg-gray-200">Trần Thị B (MIT Lab) - Đã đọc</div>
+                    </div>
+                </div>
+                <!-- Chat Chi Tiết Placeholder -->
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <h3 class="font-bold mb-4">Trò Chuyện Với Nguyễn Văn A</h3>
+                    <div class="h-64 bg-gray-100 rounded p-4 mb-4 overflow-y-auto">
+                        <div class="text-right mb-2"><span class="bg-blue-500 text-white px-2 py-1 rounded">Xin chào, chúng tôi quan tâm đến hồ sơ của bạn...</span></div>
+                        <div class="text-left mb-2"><span class="bg-gray-200 px-2 py-1 rounded">Cảm ơn! Tôi sẵn sàng phỏng vấn.</span></div>
+                    </div>
+                    <div class="flex gap-2">
+                        <input type="text" placeholder="Nhập tin nhắn..." class="flex-1 px-3 py-2 border border-gray-300 rounded-md">
+                        <button class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Gửi</button>
+                    </div>
+                    <button class="mt-4 w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700">Mời Phỏng Vấn</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-800 text-white text-center py-4 mt-12">
+        <p>&copy; 2025 EduMatch Provider. Hỗ trợ đa ngôn ngữ: Tiếng Việt & English.</p>
+    </footer>
+
+    <!-- JS đơn giản cho toggle -->
+    <script>
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+            document.getElementById(pageId).classList.remove('hidden');
+        }
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+        // Mặc định show dashboard
+        showPage('dashboard');
+    </script>
+
+</body>
+</html>

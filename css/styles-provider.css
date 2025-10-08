@@ -1,0 +1,32 @@
+/* CSS tùy chỉnh cho Provider - Chỉnh chu, chuyên nghiệp */
+body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+}
+
+/* Smooth transition cho toggle pages */
+.page-transition { 
+    transition: opacity 0.3s ease-in-out; 
+}
+
+.hidden { 
+    display: none; 
+}
+
+/* Custom cho dashboard cards */
+.dashboard-card {
+    transition: transform 0.2s ease-in-out;
+}
+.dashboard-card:hover {
+    transform: translateY(-2px);
+}
+
+/* Form inputs focus state (nâng cao) */
+input:focus, textarea:focus, select:focus {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Chat bubbles */
+.chat-bubble {
+    max-width: 70%;
+    word-wrap: break-word;
+}
