@@ -1,0 +1,36 @@
+/* CSS tùy chỉnh cho Admin - Chuyên nghiệp, dễ đọc */
+body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+}
+
+/* Smooth transition cho toggle pages */
+.page-transition { 
+    transition: opacity 0.3s ease-in-out; 
+}
+
+.hidden { 
+    display: none; 
+}
+
+/* Custom cho dashboard cards */
+.dashboard-card {
+    transition: transform 0.2s ease-in-out;
+}
+.dashboard-card:hover {
+    transform: translateY(-2px);
+}
+
+/* Form inputs focus state */
+input:focus, textarea:focus, select:focus {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Dropdown shadow */
+#roleDropdown {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* Log entries alternating colors */
+.space-y-2 > div:nth-child(even) {
+    background-color: #f9fafb;
+}
