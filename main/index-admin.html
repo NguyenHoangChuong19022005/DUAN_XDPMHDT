@@ -6,298 +6,220 @@
     <title>EduMatch Admin - Quản Lý Hệ Thống</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome cho icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Link CSS tùy chỉnh -->
-    <link rel="stylesheet" href="styles-admin.css">
+    <link rel="stylesheet" href="../css/styles-admin.css">
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-gradient-to-br from-gray-50 to-blue-50 text-gray-800 min-h-screen flex">
 
-    <!-- Header chung (Admin-focused, với role switch) -->
-    <header class="bg-blue-600 text-white shadow-lg">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <h1 class="text-2xl font-bold">EduMatch Admin</h1>
-                <span class="bg-red-500 text-xs px-2 py-1 rounded">Admin Panel</span>
+    <!-- Sidebar: Vertical Menu  -->
+    <aside id="sidebar" class="bg-gradient-to-b from-red-600 to-pink-600 text-white w-64 fixed h-full z-50 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out shadow-lg">
+        <div class="p-6">
+            <div class="flex items-center space-x-3 mb-8">
+                <i class="fas fa-cogs text-2xl"></i>
+                <h1 class="text-xl font-bold">EduMatch Admin</h1>
             </div>
-            <div class="flex items-center space-x-4">
-                <!-- Role Switch Dropdown -->
-                <div class="relative">
-                    <button onclick="toggleRoleDropdown()" class="bg-white text-blue-600 px-4 py-2 rounded hover:bg-gray-100">Chuyển Role</button>
-                    <div id="roleDropdown" class="absolute hidden right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
-                        <a href="../index.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Sinh Viên (Student)</a>
-                        <a href="../index-provider.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Nhà Cung Cấp (Provider)</a>
-                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Admin (Hiện Tại)</a>
-                    </div>
+            <!-- Role Switch Dropdown Trong Sidebar -->
+            <div class="relative mb-6">
+                <button onclick="toggleRoleDropdown()" class="w-full bg-white text-red-600 px-4 py-2 rounded-lg hover:bg-gray-100 transition duration-200 flex items-center justify-between">
+                    <span class="flex items-center space-x-2">
+                        <i class="fas fa-user-cog"></i>
+                        <span>Chuyển Role</span>
+                    </span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div id="roleDropdown" class="absolute hidden left-0 mt-2 w-full bg-white rounded-md shadow-lg z-10 border text-gray-700">
+                    <a href="index-candidates.html" class="block px-4 py-2 hover:bg-gray-100 flex items-center space-x-2">
+                        <i class="fas fa-user-graduate"></i><span>Sinh Viên</span>
+                    </a>
+                    <a href="index-provider.html" class="block px-4 py-2 hover:bg-gray-100 flex items-center space-x-2">
+                        <i class="fas fa-university"></i><span>Provider</span>
+                    </a>
+                    <a href="#" class="block px-4 py-2 hover:bg-gray-100 flex items-center space-x-2 bg-red-50">
+                        <i class="fas fa-cogs"></i><span>Admin (Hiện Tại)</span>
+                    </a>
                 </div>
-                <nav class="hidden md:flex space-x-6">
-                    <a href="#" onclick="showPage('dashboard')" class="hover:underline">Dashboard</a>
-                    <a href="#" onclick="showPage('users')" class="hover:underline">Quản Lý Tài Khoản</a>
-                    <a href="#" onclick="showPage('content')" class="hover:underline">Kiểm Duyệt Nội Dung</a>
-                    <a href="#" onclick="showPage('payments')" class="hover:underline">Xử Lý Thanh Toán</a>
-                    <a href="#" onclick="showPage('reports')" class="hover:underline">Quản Lý Khiếu Nại</a>
-                    <a href="#" onclick="showPage('logs')" class="hover:underline">Lịch Sử Hoạt Động</a>
-                    <a href="#" class="bg-white text-blue-600 px-4 py-2 rounded hover:bg-gray-100">Đăng Xuất</a>
-                </nav>
-                <!-- Mobile menu button -->
-                <button onclick="toggleMobileMenu()" class="md:hidden">☰</button>
             </div>
+            <!-- Nav Links Trong Sidebar -->
+            <nav class="space-y-2">
+                <a href="#" onclick="showPage('dashboard'); toggleSidebar()" class="nav-link block p-3 rounded-lg hover:bg-red-500 transition duration-200 flex items-center space-x-2">
+                    <i class="fas fa-tachometer-alt"></i><span>Dashboard</span>
+                </a>
+                <a href="#" onclick="showPage('users'); toggleSidebar()" class="nav-link block p-3 rounded-lg hover:bg-red-500 transition duration-200 flex items-center space-x-2">
+                    <i class="fas fa-users-cog"></i><span>Quản Lý Tài Khoản</span>
+                </a>
+                <a href="#" onclick="showPage('content'); toggleSidebar()" class="nav-link block p-3 rounded-lg hover:bg-red-500 transition duration-200 flex items-center space-x-2">
+                    <i class="fas fa-check-circle"></i><span>Kiểm Duyệt Nội Dung</span>
+                </a>
+                <a href="#" onclick="showPage('payments'); toggleSidebar()" class="nav-link block p-3 rounded-lg hover:bg-red-500 transition duration-200 flex items-center space-x-2">
+                    <i class="fas fa-credit-card"></i><span>Xử Lý Thanh Toán</span>
+                </a>
+                <a href="#" onclick="showPage('reports'); toggleSidebar()" class="nav-link block p-3 rounded-lg hover:bg-red-500 transition duration-200 flex items-center space-x-2">
+                    <i class="fas fa-exclamation-triangle"></i><span>Quản Lý Khiếu Nại</span>
+                </a>
+                <a href="#" onclick="showPage('logs'); toggleSidebar()" class="nav-link block p-3 rounded-lg hover:bg-red-500 transition duration-200 flex items-center space-x-2">
+                    <i class="fas fa-history"></i><span>Lịch Sử Hoạt Động</span>
+                </a>
+                <a href="#" onclick="showPage('settings'); toggleSidebar()" class="nav-link block p-3 rounded-lg hover:bg-red-500 transition duration-200 flex items-center space-x-2">
+                    <i class="fas fa-sliders-h"></i><span>Cài Đặt</span>
+                </a>
+            </nav>
+            <!-- Logout Button -->
+            <button onclick="logout()" class="w-full mt-8 bg-white text-red-600 px-4 py-3 rounded-lg hover:bg-gray-100 transition duration-200 font-semibold flex items-center justify-center space-x-2">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Đăng Xuất</span>
+            </button>
         </div>
-    </header>
+    </aside>
 
-    <!-- Mobile menu -->
-    <div id="mobileMenu" class="md:hidden hidden bg-blue-700 px-4 py-2 space-y-2">
-        <a href="#" onclick="showPage('dashboard'); toggleMobileMenu()" class="block hover:underline">Dashboard</a>
-        <a href="#" onclick="showPage('users'); toggleMobileMenu()" class="block hover:underline">Quản Lý Tài Khoản</a>
-        <a href="#" onclick="showPage('content'); toggleMobileMenu()" class="block hover:underline">Kiểm Duyệt Nội Dung</a>
-        <a href="#" onclick="showPage('payments'); toggleMobileMenu()" class="block hover:underline">Xử Lý Thanh Toán</a>
-        <a href="#" onclick="showPage('reports'); toggleMobileMenu()" class="block hover:underline">Quản Lý Khiếu Nại</a>
-        <a href="#" onclick="showPage('logs'); toggleMobileMenu()" class="block hover:underline">Lịch Sử Hoạt Động</a>
-        <a href="#" class="block bg-white text-blue-600 px-4 py-2 rounded hover:bg-gray-100">Đăng Xuất</a>
-    </div>
+    <!-- Overlay cho Mobile Sidebar -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden" onclick="toggleSidebar()"></div>
 
-    <!-- Nội dung chính - Các trang toggle -->
-    <main class="container mx-auto px-4 py-8">
+    <!-- Main Content: Margin cho Sidebar -->
+    <main class="flex-1 md:ml-64 p-4 transition-all duration-300">
+        <!-- Toggle Button cho Mobile -->
+        <button onclick="toggleSidebar()" class="md:hidden mb-4 p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition duration-200">
+            <i class="fas fa-bars text-xl"></i>
+        </button>
+
+        <!-- Nội dung chính - Các trang toggle -->
         
-        <!-- Dashboard -->
+        <!-- Dashboard: Enhanced Stats + Quick Actions -->
         <section id="dashboard" class="page">
-            <h2 class="text-3xl font-bold mb-6">Dashboard Tổng Quan</h2>
-            <div class="grid md:grid-cols-3 gap-6 mb-8">
-                <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                    <h3 class="text-xl font-bold text-blue-600">1,250</h3>
+            <h2 class="text-3xl font-bold mb-6 flex items-center space-x-2">
+                <i class="fas fa-tachometer-alt text-red-600"></i>
+                <span>Dashboard Tổng Quan</span>
+            </h2>
+            <div class="grid md:grid-cols-3 lg:grid-cols-6 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center transform hover:scale-105 transition duration-300">
+                    <i class="fas fa-users text-3xl text-blue-600 mb-4"></i>
+                    <h3 class="text-2xl font-bold text-blue-600">1,250</h3>
                     <p class="text-gray-600">Tài Khoản Users</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                    <h3 class="text-xl font-bold text-orange-600">15</h3>
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center transform hover:scale-105 transition duration-300">
+                    <i class="fas fa-file-check text-3xl text-orange-600 mb-4"></i>
+                    <h3 class="text-2xl font-bold text-orange-600">15</h3>
                     <p class="text-gray-600">Nội Dung Chờ Duyệt</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                    <h3 class="text-xl font-bold text-red-600">8</h3>
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center transform hover:scale-105 transition duration-300">
+                    <i class="fas fa-exclamation-triangle text-3xl text-red-600 mb-4"></i>
+                    <h3 class="text-2xl font-bold text-red-600">8</h3>
                     <p class="text-gray-600">Khiếu Nại Mới</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                    <h3 class="text-xl font-bold text-green-600">$5,200</h3>
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center transform hover:scale-105 transition duration-300">
+                    <i class="fas fa-dollar-sign text-3xl text-green-600 mb-4"></i>
+                    <h3 class="text-2xl font-bold text-green-600">$5,200</h3>
                     <p class="text-gray-600">Doanh Thu Premium</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                    <h3 class="text-xl font-bold text-purple-600">45</h3>
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center transform hover:scale-105 transition duration-300">
+                    <i class="fas fa-file-invoice text-3xl text-purple-600 mb-4"></i>
+                    <h3 class="text-2xl font-bold text-purple-600">45</h3>
                     <p class="text-gray-600">Đơn Nộp Hôm Nay</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                    <h3 class="text-xl font-bold text-indigo-600">99%</h3>
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center transform hover:scale-105 transition duration-300">
+                    <i class="fas fa-server text-3xl text-indigo-600 mb-4"></i>
+                    <h3 class="text-2xl font-bold text-indigo-600">99%</h3>
                     <p class="text-gray-600">Uptime Hệ Thống</p>
                 </div>
             </div>
-            <!-- Biểu đồ placeholder -->
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <h3 class="font-bold mb-4">Biểu Đồ Hoạt Động Theo Thời Gian</h3>
-                <div class="h-64 bg-gray-200 rounded flex items-center justify-center">..........</div>
+            <!-- Quick Actions -->
+            <div class="grid md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-gradient-to-r from-blue-500 to-indigo-500 text-white p-6 rounded-xl cursor-pointer hover:shadow-xl transition duration-300" onclick="showPage('users')">
+                    <i class="fas fa-users-cog text-3xl mb-4"></i>
+                    <h4 class="text-xl font-bold mb-2">Quản Lý Users</h4>
+                    <p>Xem và chỉnh sửa tài khoản</p>
+                </div>
+                <div class="bg-gradient-to-r from-orange-500 to-red-500 text-white p-6 rounded-xl cursor-pointer hover:shadow-xl transition duration-300" onclick="showPage('content')">
+                    <i class="fas fa-check-circle text-3xl mb-4"></i>
+                    <h4 class="text-xl font-bold mb-2">Duyệt Nội Dung</h4>
+                    <p>Phê duyệt học bổng và hồ sơ</p>
+                </div>
+                <div class="bg-gradient-to-r from-green-500 to-emerald-500 text-white p-6 rounded-xl cursor-pointer hover:shadow-xl transition duration-300" onclick="showPage('payments')">
+                    <i class="fas fa-credit-card text-3xl mb-4"></i>
+                    <h4 class="text-xl font-bold mb-2">Xử Lý Thanh Toán</h4>
+                    <p>Xác nhận và hoàn tiền</p>
+                </div>
+            </div>
+            <!-- Charts -->
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="font-bold mb-4 flex items-center space-x-2">
+                        <i class="fas fa-chart-line text-red-600"></i>
+                        <span>Hoạt Động Users</span>
+                    </h3>
+                    <div id="usersChart" class="h-64 bg-gray-100 rounded flex items-center justify-center">Chart Placeholder</div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="font-bold mb-4 flex items-center space-x-2">
+                        <i class="fas fa-chart-pie text-green-600"></i>
+                        <span>Doanh Thu Theo Loại</span>
+                    </h3>
+                    <div id="revenueChart" class="h-64 bg-gray-100 rounded flex items-center justify-center">Pie Chart Placeholder</div>
+                </div>
             </div>
         </section>
 
-        <!-- Quản Lý Tài Khoản -->
+        <!-- Manage Users: Table with Actions -->
         <section id="users" class="page hidden">
-            <h2 class="text-2xl font-bold mb-6">Quản Lý Tài Khoản</h2>
+            <h2 class="text-3xl font-bold mb-6 flex items-center space-x-2">
+                <i class="fas fa-users-cog text-blue-600"></i>
+                <span>Quản Lý Tài Khoản</span>
+            </h2>
             <div class="mb-6 flex flex-col md:flex-row gap-4">
-                <input type="text" placeholder="Tìm kiếm theo email/tên..." class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <select class="px-3 py-2 border border-gray-300 rounded-md">
-                    <option>Loại: Tất Cả</option>
-                    <option>Sinh Viên</option>
-                    <option>Nhà Cung Cấp</option>
+                <input type="text" id="userSearch" placeholder="Tìm theo email/tên..." class="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <select id="userTypeFilter" class="p-3 border border-gray-300 rounded-lg">
+                    <option value="">Tất Cả Loại</option>
+                    <option value="student">Sinh Viên</option>
+                    <option value="provider">Provider</option>
                 </select>
-                <button class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Tìm</button>
+                <button onclick="filterUsers()" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">Lọc</button>
+                <button onclick="exportUsers()" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">Xuất CSV</button>
             </div>
-            <!-- Danh Sách Users Mẫu -->
-            <div class="space-y-4">
-                <div class="bg-white p-4 rounded-lg shadow-sm border flex justify-between items-center">
-                    <div>
-                        <h4 class="font-bold">Nguyễn Văn A (student@example.com)</h4>
-                        <p class="text-sm text-gray-600">Loại: Sinh Viên | Ngày Đăng Ký: 2025-10-01 | Trạng Thái: Đã Xác Minh</p>
-                    </div>
-                    <div class="text-right space-x-2">
-                        <button class="text-blue-600 underline text-sm" onclick="window.open('../index.html#profile', '_blank')">Xem Hồ Sơ</button>
-                        <select class="px-2 py-1 border border-gray-300 rounded text-sm">
-                            <option>Hành Động</option>
-                            <option>Chỉnh Sửa</option>
-                            <option>Xóa</option>
-                            <option>Khóa</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="bg-white p-4 rounded-lg shadow-sm border flex justify-between items-center">
-                    <div>
-                        <h4 class="font-bold">MIT Org (org@mit.edu)</h4>
-                        <p class="text-sm text-gray-600">Loại: Nhà Cung Cấp | Ngày Đăng Ký: 2025-09-15 | Trạng Thái: Chờ Xác Minh</p>
-                    </div>
-                    <div class="text-right space-x-2">
-                        <button class="text-blue-600 underline text-sm" onclick="window.open('../index-provider.html#profile', '_blank')">Xem Hồ Sơ</button>
-                        <select class="px-2 py-1 border border-gray-300 rounded text-sm">
-                            <option>Hành Động</option>
-                            <option>Xác Minh</option>
-                            <option>Xóa</option>
-                        </select>
-                    </div>
-                </div>
-                <!-- Thêm item nếu cần -->
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <table class="w-full table-auto">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase">Tên/Email</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase">Loại</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase">Ngày Đăng Ký</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase">Trạng Thái</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase">Hành Động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userTableBody">
+                        <!-- Dynamic -->
+                    </tbody>
+                </table>
             </div>
-        </section>
-
-        <!-- Kiểm Duyệt Nội Dung -->
-        <section id="content" class="page hidden">
-            <h2 class="text-2xl font-bold mb-6">Kiểm Duyệt Nội Dung</h2>
-            <div class="mb-6">
-                <input type="text" placeholder="Tìm kiếm theo tiêu đề..." class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mr-2">
-                <select class="px-3 py-2 border border-gray-300 rounded-md">
-                    <option>Loại: Tất Cả</option>
-                    <option>Học Bổng</option>
-                    <option>Chương Trình</option>
-                    <option>Hồ Sơ User</option>
-                </select>
-            </div>
-            <!-- Danh Sách Nội Dung Mẫu -->
-            <div class="space-y-4">
-                <div class="bg-white p-4 rounded-lg shadow-sm border">
-                    <h4 class="font-bold">Học Bổng Fulbright - MIT</h4>
-                    <p class="text-sm text-gray-600">Đăng bởi: org@mit.edu | Ngày: 2025-10-10 | Trạng Thái: Chờ Duyệt</p>
-                    <div class="mt-4 flex space-x-4">
-                        <button class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">Duyệt</button>
-                        <button class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">Từ Chối</button>
-                        <button class="text-blue-600 underline text-sm">Xem Chi Tiết</button>
-                    </div>
+            <div id="userPagination" class="flex justify-between items-center mt-6">
+                <div id="userResultsCount" class="text-sm text-gray-700">Hiển thị 0-0 của 0 kết quả</div>
+                <div class="space-x-2">
+                    <button onclick="prevUserPage()" class="px-4 py-2 border rounded-lg hover:bg-gray-100">Trước</button>
+                    <span id="userPageInfo">Trang 1 / 1</span>
+                    <button onclick="nextUserPage()" class="px-4 py-2 border rounded-lg hover:bg-gray-100">Sau</button>
                 </div>
-                <div class="bg-white p-4 rounded-lg shadow-sm border">
-                    <h4 class="font-bold">Hồ Sơ Cập Nhật - Nguyễn Văn A</h4>
-                    <p class="text-sm text-gray-600">User: student@example.com | Ngày: 2025-10-14 | Trạng Thái: Chờ Duyệt</p>
-                    <div class="mt-4 flex space-x-4">
-                        <button class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">Duyệt</button>
-                        <button class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">Từ Chối</button>
-                        <button class="text-blue-600 underline text-sm" onclick="window.open('../index.html#profile', '_blank')">Xem Hồ Sơ</button>
+            </div>
+            <!-- User Detail Modal -->
+            <div id="userDetailModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
+                <div class="bg-white p-6 rounded-xl max-w-md w-full mx-4 animate-slideUp">
+                    <h3 id="userModalTitle" class="text-xl font-bold mb-4">Chi Tiết User</h3>
+                    <div id="userModalContent">
+                        <!-- Dynamic -->
+                    </div>
+                    <div class="mt-4 flex space-x-2">
+                        <button onclick="verifyUser()" class="flex-1 bg-green-500 text-white py-2 rounded hover:bg-green-600">Xác Minh</button>
+                        <button onclick="banUser()" class="flex-1 bg-red-500 text-white py-2 rounded hover:bg-red-600">Khóa</button>
+                        <button onclick="closeUserModal()" class="flex-1 bg-gray-300 py-2 rounded">Đóng</button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Xử Lý Thanh Toán -->
-        <section id="payments" class="page hidden">
-            <h2 class="text-2xl font-bold mb-6">Xử Lý Thanh Toán Premium</h2>
-            <div class="mb-6">
-                <input type="text" placeholder="Tìm kiếm theo user/ID giao dịch..." class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mr-2">
-                <select class="px-3 py-2 border border-gray-300 rounded-md">
-                    <option>Trạng Thái: Tất Cả</option>
-                    <option>Chờ Xác Nhận</option>
-                    <option>Hoàn Thành</option>
-                    <option>Hoàn Tiền</option>
-                </select>
-            </div>
-            <!-- Danh Sách Giao Dịch Mẫu -->
-            <div class="space-y-4">
-                <div class="bg-white p-4 rounded-lg shadow-sm border flex justify-between items-center">
-                    <div>
-                        <h4 class="font-bold">TXN-001 - Nguyễn Văn A</h4>
-                        <p class="text-sm text-gray-600">$29.99 | Ngày: 2025-10-12 | Loại: Premium Student</p>
-                    </div>
-                    <div class="text-right">
-                        <span class="text-green-600 font-bold">Hoàn Thành</span>
-                        <div class="mt-2 space-x-2">
-                            <button class="text-blue-600 underline text-sm">Chi Tiết</button>
-                            <button class="bg-yellow-600 text-white px-3 py-1 rounded text-sm hover:bg-yellow-700">Hoàn Tiền</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white p-4 rounded-lg shadow-sm border flex justify-between items-center">
-                    <div>
-                        <h4 class="font-bold">TXN-002 - MIT Org</h4>
-                        <p class="text-sm text-gray-600">$99.00 | Ngày: 2025-10-13 | Loại: Premium Provider</p>
-                    </div>
-                    <div class="text-right">
-                        <span class="text-orange-600 font-bold">Chờ Xác Nhận</span>
-                        <div class="mt-2 space-x-2">
-                            <button class="text-blue-600 underline text-sm" onclick="window.open('../index-provider.html#profile', '_blank')">Xem User</button>
-                            <button class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">Xác Nhận</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Quản Lý Khiếu Nại -->
-        <section id="reports" class="page hidden">
-            <h2 class="text-2xl font-bold mb-6">Quản Lý Khiếu Nại & Báo Cáo</h2>
-            <div class="mb-6">
-                <input type="text" placeholder="Tìm kiếm theo user/chủ đề..." class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mr-2">
-                <select class="px-3 py-2 border border-gray-300 rounded-md">
-                    <option>Loại: Tất Cả</option>
-                    <option>Hồ Sơ Giả</option>
-                    <option>Nội Dung Không Phù Hợp</option>
-                    <option>Lạm Dụng</option>
-                </select>
-            </div>
-            <!-- Danh Sách Reports Mẫu -->
-            <div class="space-y-4">
-                <div class="bg-white p-4 rounded-lg shadow-sm border">
-                    <h4 class="font-bold">Báo Cáo Từ: Anonymous - Về User Nguyễn Văn A</h4>
-                    <p class="text-sm text-gray-600">Chủ Đề: Hồ Sơ Giả | Ngày: 2025-10-14 | Mô Tả: Nghi ngờ CV giả mạo.</p>
-                    <div class="mt-4 flex space-x-4">
-                        <button class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">Giải Quyết</button>
-                        <button class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">Bỏ Qua</button>
-                        <button class="text-blue-600 underline text-sm" onclick="window.open('../index.html#profile', '_blank')">Xem User</button>
-                    </div>
-                </div>
-                <div class="bg-white p-4 rounded-lg shadow-sm border">
-                    <h4 class="font-bold">Báo Cáo Từ: User B - Về Nội Dung MIT</h4>
-                    <p class="text-sm text-gray-600">Chủ Đề: Không Phù Hợp | Ngày: 2025-10-10 | Mô Tả: Thông tin học bổng sai lệch.</p>
-                    <div class="mt-4 flex space-x-4">
-                        <button class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">Giải Quyết</button>
-                        <button class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">Bỏ Qua</button>
-                        <button class="text-blue-600 underline text-sm" onclick="window.open('../index-provider.html', '_blank')">Xem Nội Dung</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Lịch Sử Hoạt Động -->
-        <section id="logs" class="page hidden">
-            <h2 class="text-2xl font-bold mb-6">Lịch Sử Hoạt Động</h2>
-            <div class="mb-6 flex flex-col md:flex-row gap-4">
-                <input type="text" placeholder="Tìm kiếm theo user/hành động..." class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <input type="date" class="px-3 py-2 border border-gray-300 rounded-md">
-            </div>
-            <!-- Danh Sách Logs Mẫu -->
-            <div class="space-y-2">
-                <div class="bg-white p-3 rounded-lg shadow-sm border text-sm">
-                    <span class="font-bold">2025-10-15 10:30</span> | User: Nguyễn Văn A | Hành Động: Nộp Đơn Học Bổng Fulbright | Chi Tiết: <a href="#" class="text-blue-600 underline">Xem</a>
-                </div>
-                <div class="bg-white p-3 rounded-lg shadow-sm border text-sm">
-                    <span class="font-bold">2025-10-14 14:20</span> | User: MIT Org | Hành Động: Chỉnh Sửa Hồ Sơ | Chi Tiết: <a href="#" class="text-blue-600 underline" onclick="window.open('../index-provider.html#profile', '_blank')">Xem</a>
-                </div>
-                <div class="bg-white p-3 rounded-lg shadow-sm border text-sm">
-                    <span class="font-bold">2025-10-13 09:15</span> | Admin: Bạn | Hành Động: Duyệt Nội Dung | Chi Tiết: Học Bổng AI - MIT
-                </div>
-            </div>
-        </section>
-
+        
     </main>
 
-    <footer class="bg-gray-800 text-white text-center py-4 mt-12">
-        <p>&copy; 2025 EduMatch Admin. Hỗ trợ đa ngôn ngữ: Tiếng Việt & English.</p>
-    </footer>
-
-    <!-- JS cho toggle và dropdown -->
-    <script>
-        function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
-            document.getElementById(pageId).classList.remove('hidden');
-            toggleRoleDropdown(); // Đóng dropdown khi switch page
-        }
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobileMenu');
-            menu.classList.toggle('hidden');
-        }
-        function toggleRoleDropdown() {
-            const dropdown = document.getElementById('roleDropdown');
-            dropdown.classList.toggle('hidden');
-        }
-        // Mặc định show dashboard
-        showPage('dashboard');
-    </script>
+    <script src="../js/admin.js"></script>
 
 </body>
 </html>
