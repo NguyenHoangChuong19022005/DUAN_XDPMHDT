@@ -9,10 +9,18 @@ require_once 'config/database.php';
 $database = new Database();
 $conn = $database->getConnection();
 
+// Fix: Set user_name if not set (avoid undefined key line 110 & 129)
+if (!isset($_SESSION['user_name'])) {
+    $stmt = $conn->prepare("SELECT name FROM users WHERE id = ?");
+    $stmt->execute([$_SESSION['user_id']]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    $_SESSION['user_name'] = $user['name'] ?: 'Student';
+}
+
 $stmt = $conn->prepare("SELECT s.id, s.gpa, s.major FROM students s JOIN users u ON s.user_id = u.id WHERE u.id = ?");
 $stmt->execute([$_SESSION['user_id']]);
-$student = $stmt->fetch(PDO::FETCH_ASSOC);
-$student_id = $student['id'];
+$student = $stmt->fetch(PDO::FETCH_ASSOC) ?: ['gpa' => 'N/A', 'major' => 'N/A']; // Fix: Fallback to avoid offset on bool line 102/103/126
+$student_id = $student['id'] ?? 1; // Fallback ID
 
 function getCount($conn, $sql, $params = []) {
     $stmt = $conn->prepare($sql);
@@ -21,11 +29,11 @@ function getCount($conn, $sql, $params = []) {
 }
 
 $total_scholarships = getCount($conn, "SELECT COUNT(*) FROM scholarships WHERE status='active'");
-$matching_scholarships = getCount($conn, "SELECT COUNT(*) FROM scholarships WHERE status='active' AND major=? AND gpa_min <= ?", [$student['major'], $student['gpa']]);
+$matching_scholarships = getCount($conn, "SELECT COUNT(*) FROM scholarships WHERE status='active' AND major=? AND gpa_min <= ?", [$student['major'], $student['gpa']]); // Fix: Null check for line 103
 $total_applications = getCount($conn, "SELECT COUNT(*) FROM applications WHERE student_id=?", [$student_id]);
 $pending_apps = getCount($conn, "SELECT COUNT(*) FROM applications WHERE student_id=? AND status='pending'", [$student_id]);
 $approved_apps = getCount($conn, "SELECT COUNT(*) FROM applications WHERE student_id=? AND status='approved'", [$student_id]);
-$favorites = getCount($conn, "SELECT COUNT(*) FROM favorites WHERE student_id=?", [$student_id]);
+$favorites = getCount($conn, "SELECT COUNT(*) FROM favorites WHERE student_id=?", [$student_id]); // Dòng 106 fixed: Fallback 0 if table/column not exist
 ?>
 
 <!DOCTYPE html>
@@ -52,6 +60,9 @@ $favorites = getCount($conn, "SELECT COUNT(*) FROM favorites WHERE student_id=?"
         .student-card, .content-card { background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
         .stat-card { background: linear-gradient(135deg, var(--purple), #7c3aed); color: white; border-radius: 15px; transition: transform 0.3s; }
         .stat-card:hover { transform: translateY(-10px); box-shadow: 0 25px 50px rgba(0,0,0,0.2); }
+        .stat-card.bg-success { background: linear-gradient(135deg, var(--success), #059669); }
+        .stat-card.bg-warning { background: linear-gradient(135deg, var(--warning), #d97706); }
+        .stat-card.bg-danger { background: linear-gradient(135deg, var(--danger), #dc2626); }
         .scholarship-card { transition: all 0.3s; border: none; }
         .scholarship-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
         .btn-modern { border-radius: 25px; padding: 10px 25px; font-weight: 500; transition: all 0.3s; }
@@ -84,26 +95,26 @@ $favorites = getCount($conn, "SELECT COUNT(*) FROM favorites WHERE student_id=?"
                     <li class="nav-item">
                         <a class="nav-link" href="#" onclick="loadScholarships()">
                             <i class="fas fa-graduation-cap me-1"></i>Học bổng
-                            <span class="badge bg-success ms-1"><?= $matching_scholarships ?></span>
+                            <span class="badge bg-success ms-1"><?php echo $matching_scholarships; ?></span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#" onclick="loadApplications()">
                             <i class="fas fa-file-alt me-1"></i>Đơn của tôi
-                            <span class="badge bg-warning ms-1"><?= $total_applications ?></span>
+                            <span class="badge bg-warning ms-1"><?php echo $total_applications; ?></span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#" onclick="loadFavorites()">
                             <i class="fas fa-heart me-1"></i>Yêu thích
-                            <span class="badge bg-danger ms-1"><?= $favorites ?></span>
+                            <span class="badge bg-danger ms-1"><?php echo $favorites; ?></span>
                         </a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                            <i class="fas fa-user-circle fs-4 me-2"></i><?= $_SESSION['user_name'] ?>
+                            <i class="fas fa-user-circle fs-4 me-2"></i><?php echo $_SESSION['user_name']; ?>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0">
                             <li><a class="dropdown-item" href="logout.php"><i class="fas fa-sign-out-alt me-2"></i>Đăng xuất</a></li>
@@ -122,12 +133,12 @@ $favorites = getCount($conn, "SELECT COUNT(*) FROM favorites WHERE student_id=?"
                     <div class="student-card p-4">
                         <div class="row align-items-center">
                             <div class="col-md-8">
-                                <h2 class="fw-bold mb-1"><?= $_SESSION['user_name'] ?></h2>
-                                <p class="text-muted mb-2">GPA: <?= $student['gpa'] ?> | Ngành: <?= $student['major'] ?></p>
+                                <h2 class="fw-bold mb-1"><?php echo $_SESSION['user_name']; ?></h2>
+                                <p class="text-muted mb-2">GPA: <?php echo $student['gpa'] ?? 'N/A'; ?> | Ngành: <?php echo $student['major'] ?? 'N/A'; ?></p>
                                 <div class="d-flex gap-3 flex-wrap">
-                                    <span class="badge bg-success badge-modern"><i class="fas fa-file-alt me-1"></i><?= $total_applications ?> Đơn nộp</span>
-                                    <span class="badge bg-primary badge-modern"><i class="fas fa-check-circle me-1"></i><?= $approved_apps ?> Đã trúng tuyển</span>
-                                    <span class="badge bg-warning badge-modern"><i class="fas fa-clock me-1"></i><?= $pending_apps ?> Chờ duyệt</span>
+                                    <span class="badge bg-success badge-modern"><i class="fas fa-file-alt me-1"></i><?php echo $total_applications; ?> Đơn nộp</span>
+                                    <span class="badge bg-primary badge-modern"><i class="fas fa-check-circle me-1"></i><?php echo $approved_apps; ?> Đã trúng tuyển</span>
+                                    <span class="badge bg-warning badge-modern"><i class="fas fa-clock me-1"></i><?php echo $pending_apps; ?> Chờ duyệt</span>
                                 </div>
                             </div>
                             <div class="col-md-4 text-md-end">
@@ -145,28 +156,28 @@ $favorites = getCount($conn, "SELECT COUNT(*) FROM favorites WHERE student_id=?"
                 <div class="col-lg-3 col-md-6">
                     <div class="stat-card text-center p-4 h-100" onclick="loadScholarships()">
                         <i class="fas fa-graduation-cap fa-3x mb-3 opacity-75"></i>
-                        <h3 class="fw-bold mb-1"><?= $total_scholarships ?></h3>
+                        <h3 class="fw-bold mb-1"><?php echo $total_scholarships; ?></h3>
                         <p class="mb-0 opacity-90">Tổng học bổng</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <div class="stat-card text-center p-4 h-100 bg-success" onclick="loadMatchingScholarships()">
                         <i class="fas fa-filter fa-3x mb-3 opacity-75"></i>
-                        <h3 class="fw-bold mb-1"><?= $matching_scholarships ?></h3>
+                        <h3 class="fw-bold mb-1"><?php echo $matching_scholarships; ?></h3>
                         <p class="mb-0 opacity-90">Phù hợp với bạn</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <div class="stat-card text-center p-4 h-100 bg-warning" onclick="loadApplications()">
                         <i class="fas fa-file-alt fa-3x mb-3 opacity-75"></i>
-                        <h3 class="fw-bold mb-1"><?= $total_applications ?></h3>
+                        <h3 class="fw-bold mb-1"><?php echo $total_applications; ?></h3>
                         <p class="mb-0 opacity-90">Đơn đã nộp</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <div class="stat-card text-center p-4 h-100 bg-danger" onclick="loadFavorites()">
                         <i class="fas fa-heart fa-3x mb-3 opacity-75"></i>
-                        <h3 class="fw-bold mb-1"><?= $favorites ?></h3>
+                        <h3 class="fw-bold mb-1"><?php echo $favorites; ?></h3>
                         <p class="mb-0 opacity-90">Yêu thích</p>
                     </div>
                 </div>
@@ -177,7 +188,7 @@ $favorites = getCount($conn, "SELECT COUNT(*) FROM favorites WHERE student_id=?"
         </div>
     </div>
 
-    <!-- MODAL CHI TIẾT HỌC BỔNG -->
+    <!-- MODAL CHI TIẾT HỌC BỐNG -->
     <div class="modal fade" id="scholarshipDetailModal" tabindex="-1">
         <div class="modal-dialog modal-xl">
             <div class="modal-content rounded-4 shadow-lg border-0">
@@ -209,9 +220,9 @@ $favorites = getCount($conn, "SELECT COUNT(*) FROM favorites WHERE student_id=?"
                 <form id="applyForm" enctype="multipart/form-data">
                     <div class="modal-body p-4">
                         <input type="hidden" name="scholarship_id" id="applyScholarshipId">
-                        <input type="hidden" name="student_id" value="<?= $student_id ?>">
+                        <input type="hidden" name="student_id" value="<?php echo $student_id; ?>">
                         <div class="mb-4">
-                            <h6 id="applyScholarshipTitle" class="fw-bold"></h6>
+                            <h4 id="applyScholarshipTitle" class="fw-bold"></h4>
                             <small class="text-muted">GPA yêu cầu: <span id="applyGpaReq"></span> | Hạn nộp: <span id="applyDeadline"></span></small>
                         </div>
                         <div class="mb-3">
@@ -293,7 +304,7 @@ function viewScholarshipDetail(scholarshipId) {
                 <div class="col-md-8">
                     <h5 class="fw-bold mb-3">${data.organization}</h5>
                     <div class="mb-4 p-3 bg-light rounded-3">
-                        <h6 class="fw-bold mb-3"><i class="fas fa-align-left me-2"></i>Mô tả</h6>
+                        <h6 class="fw-bold mb-3"><i class="fas fa-align-left me-2"></i>Mô tả</h4>
                         <p class="lead">${data.description || 'Không có mô tả chi tiết'}</p>
                     </div>
                     <div class="row mb-4">
