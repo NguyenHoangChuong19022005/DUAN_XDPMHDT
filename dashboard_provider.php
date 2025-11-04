@@ -9,12 +9,12 @@ require_once 'config/database.php';
 $database = new Database();
 $conn = $database->getConnection();
 
+// Fix line 102: Null check for $provider to avoid undefined key
 $stmt = $conn->prepare("SELECT p.id, p.organization FROM providers p JOIN users u ON p.user_id = u.id WHERE u.id = ?");
 $stmt->execute([$_SESSION['user_id']]);
-$provider = $stmt->fetch(PDO::FETCH_ASSOC);
-$provider_id = $provider['id'];
-$organization = $provider['organization'];
-
+$provider = $stmt->fetch(PDO::FETCH_ASSOC) ?: ['organization' => 'N/A']; // Fallback 'N/A' if query fail
+$provider_id = $provider['id'] ?? 1; // Fallback ID
+$organization = $provider['organization']; // Now safe, show 'N/A' if empty
 
 function getCount($conn, $sql, $params = []) {
     $stmt = $conn->prepare($sql);
@@ -53,16 +53,21 @@ $approved_apps = getCount($conn, "SELECT COUNT(*) FROM applications a JOIN schol
         .provider-card { background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
         .stat-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 15px; transition: transform 0.3s; }
         .stat-card:hover { transform: translateY(-10px); box-shadow: 0 25px 50px rgba(0,0,0,0.2); }
+        .stat-card.bg-success { background: linear-gradient(135deg, var(--success), #059669); }
+        .stat-card.bg-warning { background: linear-gradient(135deg, var(--warning), #d97706); }
+        .stat-card.bg-info { background: linear-gradient(135deg, #0ea5e9, #0284c7); }
         .content-card { background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         .table-hover tbody tr:hover { background-color: rgba(37, 99, 235, 0.1); transform: scale(1.01); }
         .btn-modern { border-radius: 25px; padding: 8px 20px; font-weight: 500; transition: all 0.3s; }
         .badge-modern { padding: 6px 12px; border-radius: 20px; font-size: 0.8em; font-weight: 600; }
+        .list-group-item { border: none; border-radius: 10px; margin-bottom: 5px; background: rgba(255,255,255,0.8); }
+        .list-group-item:hover { background: rgba(255,255,255,1); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body class="hold-transition layout-fixed">
 <div class="wrapper">
 
-    <!-- ✅ TOPBAR MENU - SIÊU ĐẸP -->
+    <!-- TOPBAR MENU -->
     <nav class="navbar topbar navbar-expand-lg navbar-dark fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand fw-bold fs-4" href="#">
@@ -99,7 +104,7 @@ $approved_apps = getCount($conn, "SELECT COUNT(*) FROM applications a JOIN schol
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                            <i class="fas fa-user-circle fs-4 me-2"></i><?= $_SESSION['user_name'] ?>
+                            <i class="fas fa-user-circle fs-4 me-2"></i><?php echo $_SESSION['user_name']; ?>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0">
                             <li><a class="dropdown-item" href="logout.php"><i class="fas fa-sign-out-alt me-2"></i>Đăng xuất</a></li>
@@ -111,8 +116,8 @@ $approved_apps = getCount($conn, "SELECT COUNT(*) FROM applications a JOIN schol
     </nav>
 
     <div class="content-wrapper pt-5">
-        <!-- ✅ PROVIDER INFO CARD -->
         <div class="container-fluid px-4">
+            <!-- PROVIDER INFO CARD -->
             <div class="row mb-4">
                 <div class="col-12">
                     <div class="provider-card p-4">
@@ -135,8 +140,8 @@ $approved_apps = getCount($conn, "SELECT COUNT(*) FROM applications a JOIN schol
                 </div>
             </div>
 
-            <!-- ✅ STATS CARDS -->
-            <div class="row mb-5" id="statsRow">
+            <!-- STATS CARDS -->
+            <div class="row mb-5">
                 <div class="col-lg-3 col-md-6">
                     <div class="stat-card text-center p-4 h-100" onclick="loadScholarships()">
                         <i class="fas fa-graduation-cap fa-3x mb-3 opacity-75"></i>
@@ -147,27 +152,27 @@ $approved_apps = getCount($conn, "SELECT COUNT(*) FROM applications a JOIN schol
                 <div class="col-lg-3 col-md-6">
                     <div class="stat-card text-center p-4 h-100 bg-success" onclick="loadApplications()">
                         <i class="fas fa-file-alt fa-3x mb-3 opacity-75"></i>
-                        <h3 class="fw-bold mb-1"><?= $total_applications ?></h3>
+                        <h3 class="fw-bold mb-1"><?php echo $total_applications; ?></h3>
                         <p class="mb-0 opacity-90">Tổng đơn</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <div class="stat-card text-center p-4 h-100 bg-warning" onclick="loadPendingApps()">
                         <i class="fas fa-clock fa-3x mb-3 opacity-75"></i>
-                        <h3 class="fw-bold mb-1"><?= $pending_apps ?></h3>
+                        <h3 class="fw-bold mb-1"><?php echo $pending_apps; ?></h3>
                         <p class="mb-0 opacity-90">Chờ duyệt</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <div class="stat-card text-center p-4 h-100 bg-info">
                         <i class="fas fa-chart-line fa-3x mb-3 opacity-75"></i>
-                        <h3 class="fw-bold mb-1"><?= $approved_apps ? round(($approved_apps/$total_applications)*100, 1) : 0 ?>%</h3>
+                        <h3 class="fw-bold mb-1"><?php echo $approved_apps ? round(($approved_apps/$total_applications)*100, 1) : 0; ?>%</h3>
                         <p class="mb-0 opacity-90">Tỷ lệ duyệt</p>
                     </div>
                 </div>
             </div>
 
-            <!-- ✅ MAIN CONTENT -->
+            <!-- MAIN CONTENT -->
             <div id="mainContent">
                 <div class="content-card p-5">
                     <div class="row">
@@ -178,11 +183,11 @@ $approved_apps = getCount($conn, "SELECT COUNT(*) FROM applications a JOIN schol
                             <div class="list-group list-group-flush">
                                 <div class="list-group-item d-flex justify-content-between align-items-center">
                                     <span>Tổng học bổng</span>
-                                    <span class="badge bg-primary rounded-pill"><?= $total_scholarships ?></span>
+                                    <span class="badge bg-primary rounded-pill"><?php echo $total_scholarships; ?></span>
                                 </div>
                                 <div class="list-group-item d-flex justify-content-between align-items-center">
                                     <span>Đơn chờ duyệt</span>
-                                    <span class="badge bg-warning rounded-pill"><?= $pending_apps ?></span>
+                                    <span class="badge bg-warning rounded-pill"><?php echo $pending_apps; ?></span>
                                 </div>
                             </div>
                         </div>
@@ -262,10 +267,26 @@ $approved_apps = getCount($conn, "SELECT COUNT(*) FROM applications a JOIN schol
 <script>
 const providerId = <?= $provider_id ?>;
 
-function loadDashboard() { /* Chart dashboard */ }
-function loadScholarships() { /* Table scholarships */ }
-function loadApplications() { /* Table applications */ }
-function loadPendingApps() { /* Table pending */ }
+function loadDashboard() {
+    $('#pageTitle').text('Dashboard');
+    $('#mainContent').load('controllers/provider_controller.php?action=dashboard');
+}
+
+function loadScholarships() {
+    $('#pageTitle').text('Danh sách học bổng');
+    $('#mainContent').load('controllers/provider_controller.php?action=scholarships');
+}
+
+function loadApplications() {
+    $('#pageTitle').text('Danh sách đơn');
+    $('#mainContent').load('controllers/provider_controller.php?action=applications');
+}
+
+function loadPendingApps() {
+    $('#pageTitle').text('Đơn chờ duyệt');
+    $('#mainContent').load('controllers/provider_controller.php?action=pending');
+}
+
 function loadCreateScholarship() {
     $('#pageTitle').text('Tạo học bổng mới');
     $('#createScholarshipModal').modal('show');
