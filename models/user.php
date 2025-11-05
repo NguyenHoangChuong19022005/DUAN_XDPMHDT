@@ -1,72 +1,47 @@
 <?php
-// models/User.php
-// Bảng gợi ý: users(id INT PK AI, email VARCHAR(255) UNIQUE, password VARCHAR(255), name VARCHAR(255), role ENUM('student','admin','provider'), created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)
+require_once __DIR__ . '/../config/database.php';
+
 class User {
-  private mysqli $db;
-  private string $table = "users";
+    private $conn;
+    private $table_name = "users";
 
-  public function __construct(mysqli $db) {
-    $this->db = $db;
-  }
-
-  public function create(string $email, string $passwordHash, string $name, string $role = 'student'): ?int {
-    $sql = "INSERT INTO {$this->table} (email, password, name, role) VALUES (?, ?, ?, ?)";
-    if (!$stmt = $this->db->prepare($sql)) return null;
-    $stmt->bind_param("ssss", $email, $passwordHash, $name, $role);
-    if (!$stmt->execute()) return null;
-    return $stmt->insert_id;
-  }
-
-  public function findById(int $id): ?array {
-    $sql = "SELECT id, email, name, role, created_at FROM {$this->table} WHERE id = ?";
-    if (!$stmt = $this->db->prepare($sql)) return null;
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    $res = $stmt->get_result();
-    return $res->fetch_assoc() ?: null;
-  }
-
-  public function findByEmail(string $email): ?array {
-    $sql = "SELECT * FROM {$this->table} WHERE email = ?";
-    if (!$stmt = $this->db->prepare($sql)) return null;
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $res = $stmt->get_result();
-    return $res->fetch_assoc() ?: null;
-  }
-
-  public function updateBasic(int $id, string $name, string $role): bool {
-    $sql = "UPDATE {$this->table} SET name = ?, role = ? WHERE id = ?";
-    if (!$stmt = $this->db->prepare($sql)) return false;
-    $stmt->bind_param("ssi", $name, $role, $id);
-    return $stmt->execute();
-  }
-
-  public function updatePassword(int $id, string $newPasswordHash): bool {
-    $sql = "UPDATE {$this->table} SET password = ? WHERE id = ?";
-    if (!$stmt = $this->db->prepare($sql)) return false;
-    $stmt->bind_param("si", $newPasswordHash, $id);
-    return $stmt->execute();
-  }
-
-  public function delete(int $id): bool {
-    $sql = "DELETE FROM {$this->table} WHERE id = ?";
-    if (!$stmt = $this->db->prepare($sql)) return false;
-    $stmt->bind_param("i", $id);
-    return $stmt->execute();
-  }
-
-  public function list(int $limit = 20, int $offset = 0, ?string $role = null): array {
-    if ($role) {
-      $sql = "SELECT id, email, name, role, created_at FROM {$this->table} WHERE role = ? ORDER BY id DESC LIMIT ? OFFSET ?";
-      $stmt = $this->db->prepare($sql);
-      $stmt->bind_param("sii", $role, $limit, $offset);
-    } else {
-      $sql = "SELECT id, email, name, role, created_at FROM {$this->table} ORDER BY id DESC LIMIT ? OFFSET ?";
-      $stmt = $this->db->prepare($sql);
-      $stmt->bind_param("ii", $limit, $offset);
+    public function __construct($db) {
+        $this->conn = $db;
     }
-    $stmt->execute();
-    return $stmt->get_result()->fetch_all(MYSQLI_ASSOC) ?: [];
-  }
+
+    public function login($email, $password) {
+        $query = "SELECT * FROM " . $this->table_name . " WHERE email = :email LIMIT 0,1";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if($row && password_verify($password, $row['password'])) {
+            return $row;
+        }
+        return false;
+    }
+
+    public function findByEmail($email) {
+        $query = "SELECT * FROM " . $this->table_name . " WHERE email = :email LIMIT 0,1";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function create($data) {
+        $query = "INSERT INTO " . $this->table_name . " 
+                  SET email=:email, password=:password, full_name=:full_name, role=:role";
+        $stmt = $this->conn->prepare($query);
+        
+        $hashed_password = password_hash($data['password'], PASSWORD_DEFAULT);
+        $stmt->bindParam(':email', $data['email']);
+        $stmt->bindParam(':password', $hashed_password);
+        $stmt->bindParam(':full_name', $data['full_name']);
+        $stmt->bindParam(':role', $data['role']);
+        
+        return $stmt->execute();
+    }
 }
+?>

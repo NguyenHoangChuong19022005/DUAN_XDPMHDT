@@ -1,42 +1,45 @@
 <?php
-// models/Student.php
-// Bảng gợi ý: students(id INT PK AI, user_id INT FK->users.id, major VARCHAR(255), gpa DECIMAL(3,2), phone VARCHAR(20), about TEXT, created_at TIMESTAMP)
+require_once __DIR__ . '/../config/database.php';
+
 class Student {
-  private mysqli $db;
-  private string $table = "students";
+    private $conn;
+    private $table_name = "students";
 
-  public function __construct(mysqli $db) {
-    $this->db = $db;
-  }
+    public function __construct($db) {
+        $this->conn = $db;
+    }
 
-  public function create(int $userId, ?string $major, ?float $gpa, ?string $phone, ?string $about): ?int {
-    $sql = "INSERT INTO {$this->table} (user_id, major, gpa, phone, about) VALUES (?, ?, ?, ?, ?)";
-    if (!$stmt = $this->db->prepare($sql)) return null;
-    $stmt->bind_param("isdss", $userId, $major, $gpa, $phone, $about);
-    if (!$stmt->execute()) return null;
-    return $stmt->insert_id;
-  }
+    public function create($data) {
+        $query = "INSERT INTO " . $this->table_name . " 
+                  SET user_id=:user_id, gpa=:gpa, major=:major, university=:university";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':user_id', $data['user_id']);
+        $stmt->bindParam(':gpa', $data['gpa']);
+        $stmt->bindParam(':major', $data['major']);
+        $stmt->bindParam(':university', $data['university']);
+        return $stmt->execute();
+    }
 
-  public function findByUserId(int $userId): ?array {
-    $sql = "SELECT * FROM {$this->table} WHERE user_id = ?";
-    if (!$stmt = $this->db->prepare($sql)) return null;
-    $stmt->bind_param("i", $userId);
-    $stmt->execute();
-    $res = $stmt->get_result();
-    return $res->fetch_assoc() ?: null;
-  }
+    public function getByUserId($user_id) {
+        $query = "SELECT * FROM " . $this->table_name . " WHERE user_id = :user_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':user_id', $user_id);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 
-  public function updateProfile(int $userId, ?string $major, ?float $gpa, ?string $phone, ?string $about): bool {
-    $sql = "UPDATE {$this->table} SET major = ?, gpa = ?, phone = ?, about = ? WHERE user_id = ?";
-    if (!$stmt = $this->db->prepare($sql)) return false;
-    $stmt->bind_param("sdssi", $major, $gpa, $phone, $about, $userId);
-    return $stmt->execute();
-  }
-
-  public function deleteByUser(int $userId): bool {
-    $sql = "DELETE FROM {$this->table} WHERE user_id = ?";
-    if (!$stmt = $this->db->prepare($sql)) return false;
-    $stmt->bind_param("i", $userId);
-    return $stmt->execute();
-  }
+    public function updateProfile($data, $user_id) {
+        $query = "UPDATE " . $this->table_name . " SET gpa=:gpa, major=:major, university=:university, skills=:skills, achievements=:achievements, research_interest=:research_interest, thesis_topic=:thesis_topic WHERE user_id = :user_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':gpa', $data['gpa']);
+        $stmt->bindParam(':major', $data['major']);
+        $stmt->bindParam(':university', $data['university']);
+        $stmt->bindParam(':skills', $data['skills']);
+        $stmt->bindParam(':achievements', $data['achievements']);
+        $stmt->bindParam(':research_interest', $data['research_interest']);
+        $stmt->bindParam(':thesis_topic', $data['thesis_topic']);
+        $stmt->bindParam(':user_id', $user_id);
+        return $stmt->execute();
+    }
 }
+?>
