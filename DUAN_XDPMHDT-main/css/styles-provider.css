@@ -1,0 +1,131 @@
+
+body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    line-height: 1.6;
+}
+
+/* Page Transitions */
+.page { 
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s ease-in-out;
+}
+.page.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.hidden { 
+    display: none; 
+}
+
+/* Animations */
+@keyframes fadeIn { 
+    from { opacity: 0; } 
+    to { opacity: 1; } 
+}
+@keyframes slideUp { 
+    from { transform: translateY(30px); opacity: 0; } 
+    to { transform: translateY(0); opacity: 1; } 
+}
+@keyframes bounce { 
+    0%, 20%, 53%, 80%, 100% { transform: translate3d(0,0,0); }
+    40%, 43% { transform: translate3d(0, -5px, 0); }
+    70% { transform: translate3d(0, -2px, 0); }
+    90% { transform: translate3d(0,-1px,0); }
+}
+.animate-fadeIn { animation: fadeIn 1s ease-in-out; }
+.animate-slideUp { animation: slideUp 0.8s ease-out; }
+.animate-bounce { animation: bounce 2s infinite; }
+
+/* Header Nav */
+.nav-link { 
+    position: relative; 
+}
+.nav-link::after { 
+    content: ''; 
+    position: absolute; 
+    width: 0; 
+    height: 2px; 
+    bottom: -4px; 
+    left: 0; 
+    background-color: white; 
+    transition: width 0.3s ease; 
+}
+.nav-link:hover::after { 
+    width: 100%; 
+}
+
+/* Dashboard Cards */
+.dashboard-card { 
+    transition: all 0.3s ease; 
+}
+.dashboard-card:hover { 
+    transform: translateY(-5px); 
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1); 
+}
+
+/* Forms */
+input, textarea, select { 
+    transition: all 0.3s ease; 
+}
+input:focus, textarea:focus, select:focus { 
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); 
+    transform: translateY(-1px); 
+}
+
+/* Table Styles */
+table { 
+    border-collapse: separate; 
+    border-spacing: 0; 
+}
+th, td { 
+    border-bottom: 1px solid #e5e7eb; 
+}
+thead th { 
+    border-bottom-width: 2px; 
+}
+tbody tr:hover { 
+    background-color: #f9fafb; 
+    transform: scale(1.01); 
+}
+
+/* Chat Styles */
+.chat-message { 
+    max-width: 70%; 
+    padding: 0.75rem 1rem; 
+    border-radius: 1rem; 
+    word-wrap: break-word; 
+}
+.sent { 
+    background: #3b82f6; 
+    color: white; 
+    margin-left: auto; 
+}
+.received { 
+    background: #e5e7eb; 
+    color: #374151; 
+}
+
+/* Modals */
+.modal-backdrop { 
+    backdrop-filter: blur(8px); 
+}
+.modal-content { 
+    animation: slideUp 0.3s ease; 
+}
+
+/* Responsive */
+@media (max-width: 768px) { 
+    .grid { 
+        grid-template-columns: 1fr; 
+    } 
+    table { 
+        font-size: 0.875rem; 
+    } 
+}
+
+/* Utility for DB */
+.opportunity-item { data-role: "provider-opportunity"; }
+.application-row { data-id: ""; data-status: "pending"; }
+.chat-thread { data-user-id: ""; }

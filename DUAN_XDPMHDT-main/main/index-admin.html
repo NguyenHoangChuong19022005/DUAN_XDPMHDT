@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduMatch Admin - Quản Lý Hệ Thống</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome cho icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Link CSS tùy chỉnh -->
+    <link rel="stylesheet" href="../css/styles-admin.css">
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-blue-50 text-gray-800 min-h-screen flex">
+
+    <!-- Sidebar: Vertical Menu  -->
+    <aside id="sidebar" class="bg-gradient-to-b from-red-600 to-pink-600 text-white w-64 fixed h-full z-50 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out shadow-lg">
+        <div class="p-6">
+            <div class="flex items-center space-x-3 mb-8">
+                <i class="fas fa-cogs text-2xl"></i>
+                <h1 class="text-xl font-bold">EduMatch Admin</h1>
+            </div>
+            <!-- Role Switch Dropdown Trong Sidebar -->
+            <div class="relative mb-6">
+                <button onclick="toggleRoleDropdown()" class="w-full bg-white text-red-600 px-4 py-2 rounded-lg hover:bg-gray-100 transition duration-200 flex items-center justify-between">
+                    <span class="flex items-center space-x-2">
+                        <i class="fas fa-user-cog"></i>
+                        <span>Chuyển Role</span>
+                    </span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div id="roleDropdown" class="absolute hidden left-0 mt-2 w-full bg-white rounded-md shadow-lg z-10 border text-gray-700">
+                    <a href="index-candidates.html" class="block px-4 py-2 hover:bg-gray-100 flex items-center space-x-2">
+                        <i class="fas fa-user-graduate"></i><span>Sinh Viên</span>
+                    </a>
+                    <a href="index-provider.html" class="block px-4 py-2 hover:bg-gray-100 flex items-center space-x-2">
+                        <i class="fas fa-university"></i><span>Provider</span>
+                    </a>
+                    <a href="#" class="block px-4 py-2 hover:bg-gray-100 flex items-center space-x-2 bg-red-50">
+                        <i class="fas fa-cogs"></i><span>Admin (Hiện Tại)</span>
+                    </a>
+                </div>
+            </div>
+            <!-- Nav Links Trong Sidebar -->
+            <nav class="space-y-2">
+                <a href="#" onclick="showPage('dashboard'); toggleSidebar()" class="nav-link block p-3 rounded-lg hover:bg-red-500 transition duration-200 flex items-center space-x-2">
+                    <i class="fas fa-tachometer-alt"></i><span>Dashboard</span>
+                </a>
+                <a href="#" onclick="showPage('users'); toggleSidebar()" class="nav-link block p-3 rounded-lg hover:bg-red-500 transition duration-200 flex items-center space-x-2">
+                    <i class="fas fa-users-cog"></i><span>Quản Lý Tài Khoản</span>
+                </a>
+                <a href="#" onclick="showPage('content'); toggleSidebar()" class="nav-link block p-3 rounded-lg hover:bg-red-500 transition duration-200 flex items-center space-x-2">
+                    <i class="fas fa-check-circle"></i><span>Kiểm Duyệt Nội Dung</span>
+                </a>
+                <a href="#" onclick="showPage('payments'); toggleSidebar()" class="nav-link block p-3 rounded-lg hover:bg-red-500 transition duration-200 flex items-center space-x-2">
+                    <i class="fas fa-credit-card"></i><span>Xử Lý Thanh Toán</span>
+                </a>
+                <a href="#" onclick="showPage('reports'); toggleSidebar()" class="nav-link block p-3 rounded-lg hover:bg-red-500 transition duration-200 flex items-center space-x-2">
+                    <i class="fas fa-exclamation-triangle"></i><span>Quản Lý Khiếu Nại</span>
+                </a>
+                <a href="#" onclick="showPage('logs'); toggleSidebar()" class="nav-link block p-3 rounded-lg hover:bg-red-500 transition duration-200 flex items-center space-x-2">
+                    <i class="fas fa-history"></i><span>Lịch Sử Hoạt Động</span>
+                </a>
+                <a href="#" onclick="showPage('settings'); toggleSidebar()" class="nav-link block p-3 rounded-lg hover:bg-red-500 transition duration-200 flex items-center space-x-2">
+                    <i class="fas fa-sliders-h"></i><span>Cài Đặt</span>
+                </a>
+            </nav>
+            <!-- Logout Button -->
+            <button onclick="logout()" class="w-full mt-8 bg-white text-red-600 px-4 py-3 rounded-lg hover:bg-gray-100 transition duration-200 font-semibold flex items-center justify-center space-x-2">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Đăng Xuất</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Overlay cho Mobile Sidebar -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden" onclick="toggleSidebar()"></div>
+
+    <!-- Main Content: Margin cho Sidebar -->
+    <main class="flex-1 md:ml-64 p-4 transition-all duration-300">
+        <!-- Toggle Button cho Mobile -->
+        <button onclick="toggleSidebar()" class="md:hidden mb-4 p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition duration-200">
+            <i class="fas fa-bars text-xl"></i>
+        </button>
+
+        <!-- Nội dung chính - Các trang toggle -->
+        
+        <!-- Dashboard: Enhanced Stats + Quick Actions -->
+        <section id="dashboard" class="page">
+            <h2 class="text-3xl font-bold mb-6 flex items-center space-x-2">
+                <i class="fas fa-tachometer-alt text-red-600"></i>
+                <span>Dashboard Tổng Quan</span>
+            </h2>
+            <div class="grid md:grid-cols-3 lg:grid-cols-6 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center transform hover:scale-105 transition duration-300">
+                    <i class="fas fa-users text-3xl text-blue-600 mb-4"></i>
+                    <h3 class="text-2xl font-bold text-blue-600">1,250</h3>
+                    <p class="text-gray-600">Tài Khoản Users</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center transform hover:scale-105 transition duration-300">
+                    <i class="fas fa-file-check text-3xl text-orange-600 mb-4"></i>
+                    <h3 class="text-2xl font-bold text-orange-600">15</h3>
+                    <p class="text-gray-600">Nội Dung Chờ Duyệt</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center transform hover:scale-105 transition duration-300">
+                    <i class="fas fa-exclamation-triangle text-3xl text-red-600 mb-4"></i>
+                    <h3 class="text-2xl font-bold text-red-600">8</h3>
+                    <p class="text-gray-600">Khiếu Nại Mới</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center transform hover:scale-105 transition duration-300">
+                    <i class="fas fa-dollar-sign text-3xl text-green-600 mb-4"></i>
+                    <h3 class="text-2xl font-bold text-green-600">$5,200</h3>
+                    <p class="text-gray-600">Doanh Thu Premium</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center transform hover:scale-105 transition duration-300">
+                    <i class="fas fa-file-invoice text-3xl text-purple-600 mb-4"></i>
+                    <h3 class="text-2xl font-bold text-purple-600">45</h3>
+                    <p class="text-gray-600">Đơn Nộp Hôm Nay</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center transform hover:scale-105 transition duration-300">
+                    <i class="fas fa-server text-3xl text-indigo-600 mb-4"></i>
+                    <h3 class="text-2xl font-bold text-indigo-600">99%</h3>
+                    <p class="text-gray-600">Uptime Hệ Thống</p>
+                </div>
+            </div>
+            <!-- Quick Actions -->
+            <div class="grid md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-gradient-to-r from-blue-500 to-indigo-500 text-white p-6 rounded-xl cursor-pointer hover:shadow-xl transition duration-300" onclick="showPage('users')">
+                    <i class="fas fa-users-cog text-3xl mb-4"></i>
+                    <h4 class="text-xl font-bold mb-2">Quản Lý Users</h4>
+                    <p>Xem và chỉnh sửa tài khoản</p>
+                </div>
+                <div class="bg-gradient-to-r from-orange-500 to-red-500 text-white p-6 rounded-xl cursor-pointer hover:shadow-xl transition duration-300" onclick="showPage('content')">
+                    <i class="fas fa-check-circle text-3xl mb-4"></i>
+                    <h4 class="text-xl font-bold mb-2">Duyệt Nội Dung</h4>
+                    <p>Phê duyệt học bổng và hồ sơ</p>
+                </div>
+                <div class="bg-gradient-to-r from-green-500 to-emerald-500 text-white p-6 rounded-xl cursor-pointer hover:shadow-xl transition duration-300" onclick="showPage('payments')">
+                    <i class="fas fa-credit-card text-3xl mb-4"></i>
+                    <h4 class="text-xl font-bold mb-2">Xử Lý Thanh Toán</h4>
+                    <p>Xác nhận và hoàn tiền</p>
+                </div>
+            </div>
+            <!-- Charts -->
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="font-bold mb-4 flex items-center space-x-2">
+                        <i class="fas fa-chart-line text-red-600"></i>
+                        <span>Hoạt Động Users</span>
+                    </h3>
+                    <div id="usersChart" class="h-64 bg-gray-100 rounded flex items-center justify-center">Chart Placeholder</div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="font-bold mb-4 flex items-center space-x-2">
+                        <i class="fas fa-chart-pie text-green-600"></i>
+                        <span>Doanh Thu Theo Loại</span>
+                    </h3>
+                    <div id="revenueChart" class="h-64 bg-gray-100 rounded flex items-center justify-center">Pie Chart Placeholder</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Manage Users: Table with Actions -->
+        <section id="users" class="page hidden">
+            <h2 class="text-3xl font-bold mb-6 flex items-center space-x-2">
+                <i class="fas fa-users-cog text-blue-600"></i>
+                <span>Quản Lý Tài Khoản</span>
+            </h2>
+            <div class="mb-6 flex flex-col md:flex-row gap-4">
+                <input type="text" id="userSearch" placeholder="Tìm theo email/tên..." class="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <select id="userTypeFilter" class="p-3 border border-gray-300 rounded-lg">
+                    <option value="">Tất Cả Loại</option>
+                    <option value="student">Sinh Viên</option>
+                    <option value="provider">Provider</option>
+                </select>
+                <button onclick="filterUsers()" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">Lọc</button>
+                <button onclick="exportUsers()" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">Xuất CSV</button>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <table class="w-full table-auto">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase">Tên/Email</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase">Loại</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase">Ngày Đăng Ký</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase">Trạng Thái</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase">Hành Động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userTableBody">
+                        <!-- Dynamic -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="userPagination" class="flex justify-between items-center mt-6">
+                <div id="userResultsCount" class="text-sm text-gray-700">Hiển thị 0-0 của 0 kết quả</div>
+                <div class="space-x-2">
+                    <button onclick="prevUserPage()" class="px-4 py-2 border rounded-lg hover:bg-gray-100">Trước</button>
+                    <span id="userPageInfo">Trang 1 / 1</span>
+                    <button onclick="nextUserPage()" class="px-4 py-2 border rounded-lg hover:bg-gray-100">Sau</button>
+                </div>
+            </div>
+            <!-- User Detail Modal -->
+            <div id="userDetailModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
+                <div class="bg-white p-6 rounded-xl max-w-md w-full mx-4 animate-slideUp">
+                    <h3 id="userModalTitle" class="text-xl font-bold mb-4">Chi Tiết User</h3>
+                    <div id="userModalContent">
+                        <!-- Dynamic -->
+                    </div>
+                    <div class="mt-4 flex space-x-2">
+                        <button onclick="verifyUser()" class="flex-1 bg-green-500 text-white py-2 rounded hover:bg-green-600">Xác Minh</button>
+                        <button onclick="banUser()" class="flex-1 bg-red-500 text-white py-2 rounded hover:bg-red-600">Khóa</button>
+                        <button onclick="closeUserModal()" class="flex-1 bg-gray-300 py-2 rounded">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+    </main>
+
+    <script src="../js/admin.js"></script>
+
+</body>
+</html>
